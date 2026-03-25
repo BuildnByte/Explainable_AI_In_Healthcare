@@ -1,143 +1,91 @@
-"use client";
+import React from "react";
+import Link from "next/link";
+import { Brain, ShieldAlert, ArrowRight, Dna, Activity, Lock } from "lucide-react";
 
-import React, { useState } from "react";
-import {
-  Activity,
-  Brain,
-  ChevronRight,
-  Dna,
-  FileText,
-  Info,
-  Layers,
-  ShieldAlert,
-  Stethoscope,
-  Eye,
-  EyeOff
-} from "lucide-react";
-import IntakeForm from "@/components/IntakeForm";
-import XAIDashboard from "@/components/XAIDashboard";
-import NarrativePanel from "@/components/NarrativePanel";
-import RawDataToggle from "@/components/RawDataToggle";
-
-export default function Page() {
-  const [predictionData, setPredictionData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleDiagnose = async (formData: any) => {
-    setLoading(true);
-    try {
-      const response = await fetch("http://localhost:8000/diagnose", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      setPredictionData(data);
-    } catch (error) {
-      console.error("Diagnosis failed:", error);
-      alert("Error connecting to backend server.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function Home() {
   return (
-    <main className="container mx-auto px-4 py-8 max-w-7xl">
-      {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="bg-blue-600/20 p-2 rounded-lg">
-              <Brain className="w-6 h-6 text-blue-400" />
-            </div>
-            <span className="text-sm font-semibold tracking-wider text-blue-400 uppercase">Neuro-Ethical Clinical Assist</span>
+    <main className="container mx-auto px-4 py-12 max-w-7xl space-y-24">
+      {/* Hero Section */}
+      <section className="flex flex-col items-center text-center mt-12 animate-in fade-in slide-in-from-top-4 duration-1000">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
+          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          <span className="text-xs font-medium text-blue-400 tracking-wider uppercase">Neuro-Ethical Clinical Assist</span>
+        </div>
+        
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+          Explainable AI in <br />
+          <span className="gradient-text">Huntington's Care</span>
+        </h1>
+        
+        <p className="text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed">
+          A secure, precise, and transparent decision-support bridge for clinicians. Combining global predictability with local privacy using on-device inference.
+        </p>
+        
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <Link 
+            href="/prediction"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-full font-semibold transition-all shadow-[0_0_30px_-5px_#3b82f6] hover:shadow-[0_0_40px_-5px_#3b82f6]"
+          >
+            Start Diagnosis
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+          <Link 
+            href="/conclusion"
+            className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 px-8 py-3.5 rounded-full font-semibold transition-all border border-slate-700 hover:border-slate-600"
+          >
+            Read Ethical Protocol
+          </Link>
+        </div>
+      </section>
+
+      {/* Feature Insights */}
+      <section className="grid md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+        
+        <div className="glass-card p-8 rounded-3xl hover:border-blue-500/30 transition-colors group">
+          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <Lock className="w-6 h-6 text-blue-400" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold gradient-text pb-2">
-            Explainable AI in Huntington's Care
-          </h1>
-          <p className="text-slate-400 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-500" />
-            Decision Support Tool — Not a Replacement for Clinical Judgment
+          <h3 className="text-xl font-bold mb-3 text-slate-100">Zero Data Egress</h3>
+          <p className="text-slate-400 leading-relaxed">
+            All qualitative interpretation runs locally using Ollama. Protected health information never leaves the clinical hardware network.
           </p>
         </div>
 
-        <div className="flex gap-4">
-          <div className="glass-card px-4 py-2 rounded-xl flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-medium text-slate-300">Local Privacy Bridge: ACTIVE</span>
+        <div className="glass-card p-8 rounded-3xl hover:border-purple-500/30 transition-colors group">
+          <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <Activity className="w-6 h-6 text-purple-400" />
           </div>
-        </div>
-      </header>
-
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-        {/* Left Column - Intake */}
-        <div className="xl:col-span-4 space-y-6">
-          <section className="glass-card p-6 rounded-3xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-5">
-              <FileText className="w-24 h-24" />
-            </div>
-            <div className="flex items-center gap-3 mb-6">
-              <Stethoscope className="w-5 h-5 text-blue-400" />
-              <h2 className="text-xl font-bold">Patient Intake Form</h2>
-            </div>
-            <IntakeForm onSubmit={handleDiagnose} loading={loading} />
-          </section>
-
-          <section className="glass-card p-6 rounded-3xl border-amber-500/20">
-            <div className="flex items-center gap-3 mb-3 text-amber-400">
-              <Info className="w-5 h-5 text-amber-400" />
-              <h2 className="text-lg font-bold">Ethical Protocol</h2>
-            </div>
-            <ul className="space-y-3 text-sm text-slate-400">
-              <li className="flex gap-2">
-                <ChevronRight className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                <span>Zero data egress: All processing occurs on clinical hardware via Ollama.</span>
-              </li>
-              <li className="flex gap-2">
-                <ChevronRight className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                <span>Dual Validation: Global (SHAP) and Local (LIME) explanations provided.</span>
-              </li>
-              <li className="flex gap-2">
-                <ChevronRight className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                <span>Human-in-the-loop: Verifiable raw logic available for clinical audit.</span>
-              </li>
-            </ul>
-          </section>
+          <h3 className="text-xl font-bold mb-3 text-slate-100">Dual Validation</h3>
+          <p className="text-slate-400 leading-relaxed">
+            Unifying global SHAP interpretations with local LIME instances ensures high-fidelity transparency before any clinical recommendation is supported.
+          </p>
         </div>
 
-        {/* Right Column - XAI Dashboard */}
-        <div className="xl:col-span-8 space-y-8">
-          {!predictionData ? (
-            <div className="h-full min-h-[600px] flex flex-col items-center justify-center glass-card rounded-3xl border-dashed border-slate-700">
-              <Layers className="w-16 h-16 text-slate-700 mb-4" />
-              <p className="text-slate-500 text-lg">Awaiting patient data to generate explanations...</p>
-            </div>
-          ) : (
-            <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
-              {/* Diagnosis Badge */}
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1 glass-card p-6 rounded-3xl border-l-4 border-l-blue-500">
-                  <p className="text-sm text-slate-400 mb-1">Predicted Disease Stage</p>
-                  <h3 className="text-3xl font-bold text-blue-400">{predictionData.prediction}</h3>
-                </div>
-                <div className="flex-1 glass-card p-6 rounded-3xl border-l-4 border-l-purple-500">
-                  <p className="text-sm text-slate-400 mb-1">Confidence Score</p>
-                  <h3 className="text-3xl font-bold text-purple-400">{predictionData.confidence.toFixed(1)}%</h3>
-                </div>
-              </div>
-
-              {/* Charts Section */}
-              <XAIDashboard predictionData={predictionData} />
-
-              {/* Narrative Panel */}
-              <NarrativePanel predictionData={predictionData} />
-
-              {/* Raw Data Toggle */}
-              <RawDataToggle predictionData={predictionData} />
-            </div>
-          )}
+        <div className="glass-card p-8 rounded-3xl hover:border-emerald-500/30 transition-colors group">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <ShieldAlert className="w-6 h-6 text-emerald-400" />
+          </div>
+          <h3 className="text-xl font-bold mb-3 text-slate-100">Human-in-the-Loop</h3>
+          <p className="text-slate-400 leading-relaxed">
+            Directly verifiable abstract mathematical logic is converted into actionable, natural language rationales for clinical audition and safety.
+          </p>
         </div>
-      </div>
+
+      </section>
+
+      {/* Impact Stat */}
+      <section className="glass-card p-10 md:p-16 rounded-[2.5rem] relative overflow-hidden flex flex-col items-center text-center">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
+        
+        <Dna className="w-16 h-16 text-blue-400 mb-6 relative z-10" />
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 relative z-10 max-w-3xl">
+          Bridging the gap between predictive accuracy and ethical interpretability.
+        </h2>
+        <p className="text-slate-400 max-w-2xl relative z-10 text-lg">
+          Our platform translates complex multi-modal neurodegenerative indicators into clear, stage-based risk assessments ensuring you remain the ultimate decision maker.
+        </p>
+      </section>
     </main>
   );
 }
